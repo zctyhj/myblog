@@ -1,0 +1,160 @@
+备注网站编码设计过程，记录相应重要操作
+1. django 数据迁移
+python manage.py makemigrations   ----生成sql语句脚本
+python manage.py migrate          ----生成数据库表
+
+2. 创建admin的超级管理用户
+python manage.py createsuperuser
+admin/admin
+
+修改密码：admin/*******
+添加用户：
+huang/migrate1!
+
+3. 参考网站
+https://www.django.cn/course/show-32.html
+实例
+http://demo.django.cn/
+
+4. 网站特点
+所有的东西都需要自己动手去写，逻辑实现了，但是内容全是写作 显示出来的这点就非常好
+给发布文章的人很大的压力，毕竟要好看，就必须把文章写好
+
+5. 测试
+http://127.0.0.1:8000/   访问测试
+
+6. 部署到服务器
+python django uwsgi nginx mysql 配置访问，就可以写文章了
+
+我发现网络的问题很严重，按照带宽，还有目前的服务器速度，以后写文章什么的，图片最好都控制一下
+网站体验效果数据
+网站打开，不能超过3s
+一个图片数量加起，算上大小不能超过1M
+
+网站的访问速度
+保持页面下载速度的主要方法是让网页简单，尽量避免使用大量的图片，把最重要的信息安排在首页
+
+网站内容非富
+网站作为一种媒体，提供给用户的最主要还是网站的内容，没有人会在一个没内容的网站上流连忘返
+
+网站左上角区域是最吸引用户眼球
+现在现代人都大多数喜欢从左往右看东西的习惯。就好比你看书一样，也是从左往右的看，若叫你从右往左的看你就会有一种特别别扭的感觉
+
+网站一定要有特色
+网站必须有自己的特色，有特色才会吸引用户的忠实浏览你的网站
+
+
+
+
+编辑器测试字体是否好看，是否符合自己的眼光和习惯
+解决编辑器波浪线的问题
+!@#$%^&*()_+
+1234567890
+ABCDEFGHIJKLMNOPQRSTUVWXYZ
+abcdefghijklmnopqrstuvwxyz
+{}:"|[];'\,./<>?'"
+
+20200319 计划要做的事情，升级版本
+第二版本，准备减去富文本编辑器，启用markdown编辑器  使用该语法之后，两个版本使用。
+
+修改位置：
+1. 首页的最新文章之前是10个  我觉得5个就已经足够了  不够的后面分页
+
+部署步骤
+1. 启动nginx
+sudo /usr/local/nginx/sbin/nginx -t
+sudo /usr/local/nginx/sbin/nginx -c /usr/local/nginx/conf/nginx.conf
+
+        location / {
+            #将所有的参数转到uwsgi下
+            include uwsgi_params;
+            #uwsgi的ip与端口
+            uwsgi_pass /home/huang/wwwroot/scripts/uwsgi.sock;
+        }
+        location ^~ /static/ {
+             root /home/hunter/wwwroot/;
+        }
+关闭nginx：
+nginx -s stop  :快速停止nginx
+         quit  ：完整有序的停止nginx
+
+
+2. 启动uwsgi
+uwsgi uwsgi.ini
+
+重启：
+pkill -9 uwsgi
+    停止
+uwsgi uwsgi.ini
+   启动
+
+备注相关环境
+qiankunxu.com  相关环境
+Package    Version
+---------- -------
+Django     2.1.7
+pip        18.1
+PyMySQL    0.9.3
+pytz       2018.9
+setuptools 40.6.2
+uWSGI      2.0.18
+
+python     3.7.2
+nginx-1.15.9
+
+tengxun  相关环境
+Package    Version
+---------- -------
+asgiref    3.2.5
+Django     3.0.4
+ibm-db     3.0.1
+pip        18.1
+pytz       2019.3
+setuptools 40.6.2
+sqlparse   0.3.1
+uWSGI      2.0.18
+
+python     3.7.2
+nginx      1.15.9
+
+
+------------------------------------------------------------------------------------------------------------
+手动登记需要安装的模块
+uWSGI
+mysqlclient
+Pillow
+
+
+开发与生产的区别
+1. 数据库主机需要修改
+2. DEBUG = False 必须改成False
+
+
+设置首页
+1. 4个轮播图
+2. 3个首页推荐
+3. 10个热门文章
+4. 4个热门推荐
+5. 5个最新文章
+共计图片  14个
+
+除去图片剩余代码444KB
+按照总共1MB的大小，不能满足，所以一定要控制图片在200K以内
+
+20200404
+------------------------------------------------------------------------------------------------------------
+static/css/style.css line 8  添加样式为  将网站所有改成灰色
+-webkit-filter: grayscale(1);
+
+20210724
+------------------------------------------------------------------------------------------------------------
+安装requirements.txt依赖
+pip install -r requirements.txt -i http://pypi.douban.com/simple/ --trusted-host pypi.douban.com
+pip install -r requirements.txt -i http://mirrors.aliyun.com/pypi/simple/ --trusted-host mirrors.aliyun.com
+
+
+关于网站的价值
+公司部门展示，小组展示，作为沟通工具，分享工具
+
+技术思考
+图片上传的时候，和展示的时候，由于图片太大，必须要裁剪，缩小其大小 以达到网页快速获取的效果
