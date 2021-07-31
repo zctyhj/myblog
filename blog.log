@@ -158,3 +158,9 @@ pip install -r requirements.txt -i http://mirrors.aliyun.com/pypi/simple/ --trus
 
 技术思考
 图片上传的时候，和展示的时候，由于图片太大，必须要裁剪，缩小其大小 以达到网页快速获取的效果
+
+问题解决：
+1. Django bug
+/Users/apple/Library/Python/3.7/lib/python/site-packages/django/forms/boundfield.py in as_widget, line 93
+
+
